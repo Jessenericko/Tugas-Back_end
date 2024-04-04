@@ -22,4 +22,3 @@ process.on('uncaughtException', (err) => {
   setTimeout(() => process.abort(), 1000).unref();
   process.exit(1);
 });
-hallo;
