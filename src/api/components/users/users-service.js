@@ -42,6 +42,38 @@ async function getUser(id) {
 }
 
 /**
+ * Get user detail
+ * @param {string} email - User ID
+ * @returns {Promise}
+ */
+async function getemail(email) {
+  const User = await usersRepository.getEmail(email);
+
+  //email
+  if (!User) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * Get password detail
+ * @param {string} password - Password
+ * @returns {Promise}
+ */
+async function getcekPassword(password) {
+  const cekPassword = await usersRepository.getPassword(password);
+
+  //password
+  if (cekPassword) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
  * Create new user
  * @param {string} name - Name
  * @param {string} email - Email
@@ -113,4 +145,6 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  getemail,
+  getcekPassword,
 };

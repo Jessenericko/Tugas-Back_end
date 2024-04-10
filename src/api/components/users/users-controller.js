@@ -1,5 +1,6 @@
 const usersService = require('./users-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
+const { password_confirm } = require('../../../models/users-schema');
 
 /**
  * Handle get list of users request
@@ -50,8 +51,31 @@ async function createUser(request, response, next) {
     const name = request.body.name;
     const email = request.body.email;
     const password = request.body.password;
+    const cekEmail = await usersService.getemail(email);
+    const cekPassword = await usersService.getcekPassword(password);
+    const password_confirm = request.body.password_confirm;
 
-    const success = await usersService.createUser(name, email, password);
+    if (!cekEmail) {
+      throw errorResponder(
+        errorTypes.EMAIL_ALREADY_TAKEN,
+        'Email alredy exist'
+      );
+    }
+
+    if (!cekPassword) {
+      throw errorResponder(errorTypes.INVALID_PASSWORD, 'Invalid Password');
+    }
+
+    if (password_confirm != password) {
+      throw errorResponder(errorTypes.INVALID_PASSWORD, 'Invalid Password');
+    }
+
+    const success = await usersService.createUser(
+      name,
+      email,
+      password,
+      password_confirm
+    );
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
