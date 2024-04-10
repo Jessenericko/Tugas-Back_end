@@ -53,7 +53,7 @@ async function createUser(request, response, next) {
     const password = request.body.password;
     const cekEmail = await usersService.getemail(email);
     const cekPassword = await usersService.getcekPassword(password);
-    const password_confirm = request.body.password_confirm;
+    const password_confirm = request.body.cpass;
 
     if (!cekEmail) {
       throw errorResponder(
@@ -70,12 +70,7 @@ async function createUser(request, response, next) {
       throw errorResponder(errorTypes.INVALID_PASSWORD, 'Invalid Password');
     }
 
-    const success = await usersService.createUser(
-      name,
-      email,
-      password,
-      password_confirm
-    );
+    const success = await usersService.createUser(name, email, password);
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
@@ -141,10 +136,33 @@ async function deleteUser(request, response, next) {
   }
 }
 
+async function ubspass(request, response, next) {
+  // check if password is valid
+  try {
+    const id = request.params.id;
+    const passwordlama = request.body.passwordlama;
+    const passwordbaru = request.body.passwordbaru;
+    const password_confirm = request.body.password_confirm;
+    const dapatkan = await usersService.changePass(
+      id,
+      passwordlama,
+      passwordbaru,
+      password_confirm
+    );
+
+    return response
+      .status(200)
+      .json({ message: 'YAY Password  Berhasil Di Ganti' });
+  } catch (error) {
+    return next(error);
+  }
+}
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
+  ubspass,
 };

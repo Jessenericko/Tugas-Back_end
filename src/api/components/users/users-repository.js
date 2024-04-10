@@ -72,6 +72,24 @@ async function updateUser(id, name, email) {
 }
 
 /**
+ * Get user detail
+ * @param {string} email - User email
+ * @returns {Promise}
+ */
+async function mailCheck(email) {
+  return User.findOne({ email: email });
+}
+
+/**
+ * Get Pass detail
+ * @param {string} Password - User Password
+ * @returns {Promise}
+ */
+async function passCheck(id, newpass) {
+  await User.findByIdAndUpdate(id, { password: newpass });
+}
+
+/**
  * Get user detail (email)
  * @param {string} email - User email
  * @returns {Promise}
@@ -97,4 +115,6 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
+  mailCheck,
+  passCheck,
 };

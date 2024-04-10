@@ -1,5 +1,6 @@
 const usersRepository = require('./users-repository');
 const { hashPassword } = require('../../../utils/password');
+const { passwordMatched } = require('../../../utils/password');
 
 /**
  * Get list of users
@@ -19,6 +20,19 @@ async function getUsers() {
   }
 
   return results;
+}
+
+async function changePass(id, passwordlama, passwordbaru, comfrimpass) {
+  if (passwordbaru != comfrimpass) {
+    throw new Error('salah :v');
+  }
+  const user = await usersRepository.getUser(id);
+  const elig = await passwordMatched(passwordlama, user.password); //cek pasword lama ama baru
+  if (!elig) {
+    throw new Error('Password Yang sudah lama salah :v !');
+  }
+  const hashedPassword = await hashPassword(passwordbaru);
+  await usersRepository.passCheck(id, hashedPassword);
 }
 
 /**
@@ -67,6 +81,22 @@ async function getcekPassword(password) {
 
   //password
   if (cekPassword) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * Get user detail
+ * @param {string} email - User ID
+ * @returns {Promise}
+ */
+async function mailChecks(email) {
+  const User = await usersRepository.mailCheck(email);
+
+  //email
+  if (!User) {
     return true;
   } else {
     return false;
@@ -147,4 +177,6 @@ module.exports = {
   deleteUser,
   getemail,
   getcekPassword,
+  mailChecks,
+  changePass,
 };
