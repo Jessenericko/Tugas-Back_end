@@ -136,7 +136,7 @@ async function deleteUser(request, response, next) {
   }
 }
 
-async function ubspass(request, response, next) {
+async function pswpass(request, response, next) {
   // check if password is valid
   try {
     const id = request.params.id;
@@ -164,5 +164,5 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
-  ubspass,
+  pswpass,
 };
